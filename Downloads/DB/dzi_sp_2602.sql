@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Време на генериране:  9 фев 2026 в 11:27
+-- Време на генериране: 14 март 2026 в 20:44
 -- Версия на сървъра: 10.4.32-MariaDB
 -- Версия на PHP: 8.2.12
 
@@ -85,7 +85,15 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 (21, 'Can add session', 6, 'add_session'),
 (22, 'Can change session', 6, 'change_session'),
 (23, 'Can delete session', 6, 'delete_session'),
-(24, 'Can view session', 6, 'view_session');
+(24, 'Can view session', 6, 'view_session'),
+(25, 'Can add Карта', 7, 'add_card'),
+(26, 'Can change Карта', 7, 'change_card'),
+(27, 'Can delete Карта', 7, 'delete_card'),
+(28, 'Can view Карта', 7, 'view_card'),
+(29, 'Can add Лог на достъп', 8, 'add_accesslog'),
+(30, 'Can change Лог на достъп', 8, 'change_accesslog'),
+(31, 'Can delete Лог на достъп', 8, 'delete_accesslog'),
+(32, 'Can view Лог на достъп', 8, 'view_accesslog');
 
 -- --------------------------------------------------------
 
@@ -112,7 +120,7 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$600000$pJRajdCm2DQwz9SJHhfNL3$QGMcd/F7e8mclzzSBiKQLLhwjWgYVThq2YvOo1Qa8VA=', '2026-02-09 10:11:44.546193', 1, 'user_26', '', '', '', 1, 1, '2026-02-09 10:11:21.376273');
+(1, 'pbkdf2_sha256$600000$pJRajdCm2DQwz9SJHhfNL3$QGMcd/F7e8mclzzSBiKQLLhwjWgYVThq2YvOo1Qa8VA=', '2026-03-14 19:42:40.669865', 1, 'user_26', '', '', '', 1, 1, '2026-02-09 10:11:21.376273');
 
 -- --------------------------------------------------------
 
@@ -177,6 +185,8 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 (2, 'auth', 'permission'),
 (4, 'auth', 'user'),
 (5, 'contenttypes', 'contenttype'),
+(8, 'main', 'accesslog'),
+(7, 'main', 'card'),
 (6, 'sessions', 'session');
 
 -- --------------------------------------------------------
@@ -214,7 +224,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 (15, 'auth', '0010_alter_group_name_max_length', '2026-02-09 10:10:03.824066'),
 (16, 'auth', '0011_update_proxy_permissions', '2026-02-09 10:10:03.829445'),
 (17, 'auth', '0012_alter_user_first_name_max_length', '2026-02-09 10:10:03.840690'),
-(18, 'sessions', '0001_initial', '2026-02-09 10:10:03.872291');
+(18, 'sessions', '0001_initial', '2026-02-09 10:10:03.872291'),
+(19, 'main', '0001_initial', '2026-03-13 20:16:36.498610');
 
 -- --------------------------------------------------------
 
@@ -233,7 +244,65 @@ CREATE TABLE `django_session` (
 --
 
 INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALUES
-('jub7ulq0fk6krq9cxcpzjy1vrc97gy2x', '.eJxVjMsOwiAQRf-FtSHDw0Jduu83kIEZpGogKe3K-O_apAvd3nPOfYmA21rC1nkJM4mLUOL0u0VMD647oDvWW5Op1XWZo9wVedAup0b8vB7u30HBXr41WCBjyRnIkAcc2ZGyipI_Z7aGKGFm5ViPGqKNmUDDEJP2oLw3ZEm8P-sIOBw:1vpOF6:mOrMYPzQdhpe5saB6DgvvsTi9GbwOeLkv7R8ZQurcd4', '2026-02-23 10:11:44.550409');
+('jub7ulq0fk6krq9cxcpzjy1vrc97gy2x', '.eJxVjMsOwiAQRf-FtSHDw0Jduu83kIEZpGogKe3K-O_apAvd3nPOfYmA21rC1nkJM4mLUOL0u0VMD647oDvWW5Op1XWZo9wVedAup0b8vB7u30HBXr41WCBjyRnIkAcc2ZGyipI_Z7aGKGFm5ViPGqKNmUDDEJP2oLw3ZEm8P-sIOBw:1vpOF6:mOrMYPzQdhpe5saB6DgvvsTi9GbwOeLkv7R8ZQurcd4', '2026-02-23 10:11:44.550409'),
+('lk7apt1ujrw0aeqv071zn06rofc35zdd', '.eJxVjMsOwiAQRf-FtSHDw0Jduu83kIEZpGogKe3K-O_apAvd3nPOfYmA21rC1nkJM4mLUOL0u0VMD647oDvWW5Op1XWZo9wVedAup0b8vB7u30HBXr41WCBjyRnIkAcc2ZGyipI_Z7aGKGFm5ViPGqKNmUDDEJP2oLw3ZEm8P-sIOBw:1w1Usi:Em_T6KbQCUqudxED9CGEt_9rRkGq7eBnNb77wFCFbvM', '2026-03-28 19:42:40.672375');
+
+-- --------------------------------------------------------
+
+--
+-- Структура на таблица `main_accesslog`
+--
+
+CREATE TABLE `main_accesslog` (
+  `id` bigint(20) NOT NULL,
+  `unknown_uid` varchar(50) DEFAULT NULL,
+  `timestamp` datetime(6) NOT NULL,
+  `event_type` varchar(20) NOT NULL,
+  `card_id` bigint(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Схема на данните от таблица `main_accesslog`
+--
+
+INSERT INTO `main_accesslog` (`id`, `unknown_uid`, `timestamp`, `event_type`, `card_id`) VALUES
+(1, '1E FB E4 06', '2026-03-13 20:38:06.874995', 'DENIED_UNKNOWN', NULL),
+(2, '1E FB E4 06', '2026-03-13 20:42:24.757091', 'DENIED_UNKNOWN', NULL),
+(3, '1E FB E4 06', '2026-03-13 20:54:30.800275', 'DENIED_UNKNOWN', NULL),
+(4, '1E FB E4 06', '2026-03-13 21:30:28.232612', 'DENIED_UNKNOWN', NULL),
+(5, '1E FB E4 06', '2026-03-14 15:08:46.695109', 'DENIED_UNKNOWN', NULL),
+(6, '1E FB E4 06', '2026-03-14 15:08:59.674241', 'DENIED_UNKNOWN', NULL),
+(7, '1E FB E4 06', '2026-03-14 15:09:17.242457', 'DENIED_UNKNOWN', NULL),
+(8, NULL, '2026-03-14 17:10:28.614503', 'GRANTED', 2),
+(9, NULL, '2026-03-14 17:11:22.260812', 'DENIED_INACTIVE', 2),
+(10, NULL, '2026-03-14 17:11:33.595031', 'DENIED_INACTIVE', 2),
+(11, NULL, '2026-03-14 19:10:51.932743', 'DENIED_INACTIVE', 2),
+(12, NULL, '2026-03-14 19:10:58.602875', 'DENIED_INACTIVE', 2),
+(13, NULL, '2026-03-14 19:11:04.849242', 'DENIED_INACTIVE', 2),
+(14, 'E7 73 23 07', '2026-03-14 19:11:09.909753', 'DENIED_UNKNOWN', NULL),
+(15, NULL, '2026-03-14 19:11:25.274844', 'GRANTED', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Структура на таблица `main_card`
+--
+
+CREATE TABLE `main_card` (
+  `id` bigint(20) NOT NULL,
+  `uid` varchar(50) NOT NULL,
+  `owner_name` varchar(100) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL,
+  `created_at` datetime(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Схема на данните от таблица `main_card`
+--
+
+INSERT INTO `main_card` (`id`, `uid`, `owner_name`, `is_active`, `created_at`) VALUES
+(1, 'de e4 24 32', 'test test', 1, '2026-03-14 16:03:15.629780'),
+(2, '1E FB E4 06', 'Иван Петров', 1, '2026-03-14 16:04:23.881681');
 
 --
 -- Indexes for dumped tables
@@ -313,6 +382,20 @@ ALTER TABLE `django_session`
   ADD KEY `django_session_expire_date_a5c62663` (`expire_date`);
 
 --
+-- Индекси за таблица `main_accesslog`
+--
+ALTER TABLE `main_accesslog`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `main_accesslog_card_id_4988e37d_fk_main_card_id` (`card_id`);
+
+--
+-- Индекси за таблица `main_card`
+--
+ALTER TABLE `main_card`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `uid` (`uid`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -332,7 +415,7 @@ ALTER TABLE `auth_group_permissions`
 -- AUTO_INCREMENT for table `auth_permission`
 --
 ALTER TABLE `auth_permission`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `auth_user`
@@ -362,13 +445,25 @@ ALTER TABLE `django_admin_log`
 -- AUTO_INCREMENT for table `django_content_type`
 --
 ALTER TABLE `django_content_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `django_migrations`
 --
 ALTER TABLE `django_migrations`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- AUTO_INCREMENT for table `main_accesslog`
+--
+ALTER TABLE `main_accesslog`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `main_card`
+--
+ALTER TABLE `main_card`
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Ограничения за дъмпнати таблици
@@ -407,6 +502,12 @@ ALTER TABLE `auth_user_user_permissions`
 ALTER TABLE `django_admin_log`
   ADD CONSTRAINT `django_admin_log_content_type_id_c4bce8eb_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`),
   ADD CONSTRAINT `django_admin_log_user_id_c564eba6_fk_auth_user_id` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+
+--
+-- Ограничения за таблица `main_accesslog`
+--
+ALTER TABLE `main_accesslog`
+  ADD CONSTRAINT `main_accesslog_card_id_4988e37d_fk_main_card_id` FOREIGN KEY (`card_id`) REFERENCES `main_card` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

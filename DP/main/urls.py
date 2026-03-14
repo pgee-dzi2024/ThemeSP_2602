@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/scan/', ScanCardView.as_view(), name='scan_card'),
 
     # Маршрути за уеб интерфейса
-    path('login', login, name='login'),
+    path('', login_view, name='home'),
+    path('login', login_view, name='login'),
     path('dashboard', dashboard, name='dashboard'),
 ]

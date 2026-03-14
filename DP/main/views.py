@@ -1,10 +1,12 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import AuthenticationForm
 from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Card, AccessLog
 from .serializers import CardSerializer, AccessLogSerializer
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 # 1. Изгледи за фронтенда (Vue.js)
@@ -61,8 +63,20 @@ class ScanCardView(APIView):
 #    потребителски интерфейс
 # **************************************************
 
-def login(request):
-    return render(request, 'main/login.html')
+def login_view(request):
+    next_url = request.GET.get('next') or request.POST.get('next') or 'home'
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            return redirect('dashboard')
+    else:
+        form = AuthenticationForm(request)
+
+    # Подавам form за да покажа грешки/values без да променям визията
+    return render(request, 'main/login.html', {'form': form, 'next': next_url})
+
 
 def dashboard(request):
     return render(request, 'main/dashboard.html')
